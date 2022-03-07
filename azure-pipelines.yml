@@ -20,6 +20,9 @@ stages:
     pool:
       vmImage: $(image)
 
+    variables:
+      pyenv: ${{replace(variables['python.version'], '.', '')}}
+
     steps:
     - task: UsePythonVersion@0
       inputs:
@@ -35,5 +38,5 @@ stages:
     # - script: poetry run tox -e ${{replace(variables['python.version'], '.', '')}}
     #   displayName: 'Running tests via tox'
 
-    - script: echo ${{replace(variables['python.version'], '.', '')}}
+    - script: echo  $(pyenv)
       displayName: 'Running tests via tox'
