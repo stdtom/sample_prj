@@ -1,0 +1,96 @@
+# Config file for automatic testing at travis-ci.com
+
+language: python
+stages:
+  - test
+  - name: deploy
+    # require the branch name to be master (note for PRs this is the base branch name)
+    if: tag is present
+jobs:
+  include:
+    - python: "3.8"
+    - python: "3.7"
+    - python: "3.6"
+    - name: "Python 3.8 on Windows"
+      os: windows
+      language: shell       # 'language: python' is an error on Travis CI Windows
+      before_install:
+        - choco install python --version 3.8.0
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+    - stage: deploy
+      python: 3.7
+      script: skip     # usually you do not want to rerun any tests
+      before_deploy:
+        - poetry config http-basic.mypypi $MYPYPI_USER $MYPYPI_PASS
+        - poetry config http-basic.testpypi $MYPYPI_USER $MYPYPI_PASS
+        - poetry config repositories.testpypi https://test.pypi.org/legacy/
+        - poetry install -v
+        - poetry build
+        - poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile
+        - tar cvzf dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.tar.gz dist/sample_prj
+        - sha256sum dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.tar.gz > dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.tar.gz.sha256
+        - ls -R dist
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script: poetry publish -r testpypi
+          on:
+            tags: true
+            repo: tomestro/sample_prj
+            branch: master
+        - provider: releases
+          skip_cleanup: true
+          api_key: $GITHUB_RELEASE_TOKEN
+          file_glob: true
+          file: dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.*
+          on:
+            tags: true
+            repo: tomestro/sample_prj
+            branch: master
+    - stage: deploy
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.7.0
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+      script: skip     # usually you do not want to rerun any tests
+      before_deploy:
+        - poetry install -v
+        - poetry build
+        - poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile
+        - ls -R dist
+        - 7z a dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip dist/sample_prj.exe
+        - ls -R dist
+        - sha256sum dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip > dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.zip.sha256
+        - ls -R dist
+      deploy:
+        - provider: releases
+          skip_cleanup: true
+          api_key: $GITHUB_RELEASE_TOKEN
+          file_glob: true
+          file: dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.*
+          on:
+            tags: true
+            repo: tomestro/sample_prj
+            branch: master
+
+# Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+install:
+  - pip install -U poetry
+  - pip install -U tox-travis
+  - pip install -U coveralls
+  - pip install -U codecov
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./cc-test-reporter before-build; fi
+
+# Command to run tests, e.g. python setup.py test
+script:
+  - tox
+
+after_script:
+  - coveralls
+  - codecov
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi

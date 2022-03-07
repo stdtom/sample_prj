@@ -1,0 +1,8 @@
+requirements:
+  - pyproject.toml
+  - poetry.lock
+branch: develop
+schedule: "every week"
+label_prs: update
+assignees:
+ - tomestro
