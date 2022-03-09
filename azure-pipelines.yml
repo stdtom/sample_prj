@@ -7,25 +7,16 @@ stages:
         'Python 3.7/Linux':
           image: 'ubuntu-20.04'
           python_version: '3.7'
-          pyenv: 'py37'
         'Python 3.8/Linux':
           image: 'ubuntu-20.04'
           python_version: '3.8'
-          pyenv: 'py38'
 
     pool:
       vmImage: $(image)
 
-    variables:
-      env_a: $[replace(variables['python_version'], '.', '')]
-
     steps:
     - script: |
-        echo python_version '$(python_version)'
-        echo pyenv $(pyenv)
-        echo env_a $(env_a)
-        ENVB=$(sed -e 's/\.//' <<< "py$(python_version)")
+        PYENV=$(sed -e 's/\.//' <<< "py$(python_version)")
         echo env_b $ENVB
-        echo expression $[replace(variables['python_version'], '.', '')]
       displayName: 'Output Test'
         
