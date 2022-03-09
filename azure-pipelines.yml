@@ -26,10 +26,9 @@ stages:
         versionSpec: '$(python_version)'
     - script: |
         pip install -U poetry
+        pip install -U tox
       displayName: 'Install Poetry'
-    - script: make init-dev
-      displayName: 'Install dependencies'
-    - script: |
+    - bash: |
         PYENV=$(sed -e 's/\.//' <<< "py$(python_version)")
         poetry run tox -e $PYENV
       displayName: 'Running tests via tox'
