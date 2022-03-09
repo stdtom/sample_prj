@@ -24,7 +24,7 @@ stages:
         echo python_version '$(python_version)'
         echo pyenv $(pyenv)
         echo env_a $(env_a)
-        ENVB=$(python_version)
+        ENVB=py$(python_version)
         echo env_b $ENVB
         echo expression $[replace(variables['python_version'], '.', '')]
       displayName: 'Output Test'
