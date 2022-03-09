@@ -7,12 +7,15 @@ stages:
         'Python 3.6/Linux':
           image: 'ubuntu-20.04'
           python_version: '3.6'
+          pyenv: 'py36'
         'Python 3.7/Linux':
           image: 'ubuntu-20.04'
           python_version: '3.7'
+          pyenv: 'py37'
         'Python 3.8/Linux':
           image: 'ubuntu-20.04'
           python_version: '3.8'
+          pyenv: 'py38'
         'Windows Server 2019':
           image: 'windows-2019'
           python_version: '3.8'
@@ -21,8 +24,7 @@ stages:
       vmImage: $(image)
 
     variables:
-      pyenv: $[replace(variables['python_version'], '.', '')]
-      uffix: $[replace(variables['build.sourcebranchname'], '_', '-')]
+      xyenv: $[replace(variables['python_version'], '.', '')]
 
     steps:
     - task: UsePythonVersion@0
