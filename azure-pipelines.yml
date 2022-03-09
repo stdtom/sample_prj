@@ -17,6 +17,6 @@ stages:
     steps:
     - script: |
         PYENV=$(sed -e 's/\.//' <<< "py$(python_version)")
-        echo env_b $ENVB
+        echo env_b $PYENV
       displayName: 'Output Test'
         
