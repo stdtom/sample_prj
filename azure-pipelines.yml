@@ -27,5 +27,9 @@ stages:
         echo python_version '$(python_version)'
         echo pyenv $(pyenv)
         echo env_a $(env_a)
+        echo env_b $(env_b)
         echo expression $[replace(variables['python_version'], '.', '')]
       displayName: 'Output Test'
+      env:
+        env_b: $[replace(variables['python_version'], '.', '')]
+        
