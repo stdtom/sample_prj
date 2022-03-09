@@ -22,6 +22,7 @@ stages:
 
     variables:
       pyenv: $[replace(variables['python_version'], '.', '')]
+      uffix: $[replace(variables['build.sourcebranchname'], '_', '-')]
 
     steps:
     - task: UsePythonVersion@0
@@ -38,8 +39,11 @@ stages:
     # - script: poetry run tox -e ${{replace(variables['python_version'], '.', '')}}
     #   displayName: 'Running tests via tox'
 
+    - script: echo  '$(python_version)'
+      displayName: 'Test 1a'
+
     - script: echo  $(pyenv)
-      displayName: 'Test 1'
+      displayName: 'Test 1b'
 
     - script: echo $[replace(variables['python_version'], '.', '')]
       displayName: 'Test 2'
