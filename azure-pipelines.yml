@@ -30,5 +30,6 @@ stages:
       displayName: 'Install Poetry'
     - bash: |
         PYENV=$(sed -e 's/\.//' <<< "py$(python_version)")
+        env
         poetry run tox -e $PYENV
       displayName: 'Running tests via tox'
