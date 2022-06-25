@@ -4,7 +4,6 @@
 
 import pytest
 
-
 from sample_prj import sample_prj
 
 

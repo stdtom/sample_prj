@@ -25,7 +25,6 @@ classifiers = [
 python = "^3.8"
 
 [tool.poetry.dev-dependencies]
-black = "==21.7b0"
 bump2version = "*"
 coverage = "*"
 flake8 = "*"
@@ -39,6 +38,7 @@ twine = "*"
 watchdog = "*"
 wheel = "*"
 click = "<=8.0.4"
+black = "^22.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
