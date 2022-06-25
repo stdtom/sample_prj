@@ -55,7 +55,7 @@ lint: ## check style with flake8
 	poetry run flake8 sample_prj tests
 
 format: ## run autoformat with isort and black
-	poetry run isort
+	poetry run isort sample_prj tests
 	poetry run black sample_prj tests
 
 test: ## run tests quickly with the default Python

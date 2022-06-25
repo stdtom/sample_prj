@@ -3,19 +3,19 @@ stages:
   jobs:
   - job: Test
     strategy:
-      matrix: 
-        'Python 3.6/Linux':
-          image: 'ubuntu-20.04'
-          python_version: '3.6'
-        'Python 3.7/Linux':
-          image: 'ubuntu-20.04'
-          python_version: '3.7'
+      matrix:
         'Python 3.8/Linux':
           image: 'ubuntu-20.04'
-          python_version: '3.8'
+          pythonVersion: '3.8'
+        'Python 3.9/Linux':
+          image: 'ubuntu-20.04'
+          pythonVersion: '3.9'
+        'Python 3.10/Linux':
+          image: 'ubuntu-20.04'
+          pythonVersion: '3.10'
         'Windows Server 2019':
           image: 'windows-2019'
-          python_version: '3.8'
+          pythonVersion: '3.8'
 
     pool:
       vmImage: $(image)
@@ -23,13 +23,14 @@ stages:
     steps:
     - task: UsePythonVersion@0
       inputs:
-        versionSpec: '$(python_version)'
+        versionSpec: '$(pythonVersion)'
+
     - script: |
         pip install -U poetry
         pip install -U tox
       displayName: 'Install Poetry'
+
     - bash: |
-        PYENV=$(sed -e 's/\.//' <<< "py$(python_version)")
-        env
+        PYENV=$(sed -e 's/\.//' <<< "py$(pythonVersion)")
         poetry run tox -e $PYENV
       displayName: 'Running tests via tox'

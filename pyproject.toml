@@ -3,12 +3,12 @@
 name = "sample_prj"
 version = "0.2.26"
 description = "Python Boilerplate contains all the "
-authors = ["Tomestro <tomestro@gmx.net>"]
+authors = ["StdTom <stdtom@gmx.net>"]
 license = "Apache Software License 2.0"
 
 readme = "README.rst"
 
-homepage = "https://github.com/tomestro/sample_prj"
+homepage = "https://github.com/stdtom/sample_prj"
 
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -16,16 +16,16 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8"
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10"
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 
 [tool.poetry.dev-dependencies]
-black = "==19.10b0"
+black = "==21.7b0"
 bump2version = "*"
 coverage = "*"
 flake8 = "*"
@@ -33,10 +33,13 @@ isort = "*"
 pre-commit = "*"
 pytest = "*"
 pytest-runner = "*"
-sphinx = "*"
+Sphinx = "*"
 tox = "*"
 twine = "*"
 watchdog = "*"
 wheel = "*"
-pyinstaller = "*"
-pefile = "*"
+click = "<=8.0.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
