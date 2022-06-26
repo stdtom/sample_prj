@@ -86,7 +86,7 @@ release: dist ## package and upload a release to PyPI
 
 dist: clean ## builds source and wheel package as well as stand-alone executable
 	poetry build
-	poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile
+	poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages

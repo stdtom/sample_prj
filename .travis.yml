@@ -27,7 +27,7 @@ jobs:
         - poetry config repositories.testpypi https://test.pypi.org/legacy/
         - poetry install -v
         - poetry build
-        - poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile
+        - poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
         - tar cvzf dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.tar.gz dist/sample_prj
         - sha256sum dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.tar.gz > dist/sample_prj-$TRAVIS_TAG-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH.tar.gz.sha256
         - ls -R dist
