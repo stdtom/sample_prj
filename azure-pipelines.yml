@@ -1,3 +1,5 @@
+variables:
+- group: TestPyPi
 stages:
 - stage: Test
   jobs:
@@ -12,6 +14,9 @@ stages:
           pythonVersion: '3.9'
         'Python 3.10/Linux':
           image: 'ubuntu-20.04'
+          pythonVersion: '3.10'
+        'Python 3.10/MAc OS 11':
+          image: 'macOS-11'
           pythonVersion: '3.10'
         'Windows Server 2019':
           image: 'windows-2019'
@@ -34,3 +39,35 @@ stages:
         PYENV=$(sed -e 's/\.//' <<< "py$(pythonVersion)")
         poetry run tox -e $PYENV
       displayName: 'Running tests via tox'
+
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    strategy:
+      matrix:
+        'Deploy':
+          image: 'ubuntu-20.04'
+          pythonVersion: '3.10'
+
+    pool:
+      vmImage: $(image)
+
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+
+    - script: |
+        pip install -U poetry
+        pip install -U tox
+      displayName: 'Install Poetry'
+
+    - bash: |
+        echo ">>>>>>" $PYPI_HOST
+        echo ">>>>>>" $PYPI_TEST
+      displayName: 'Test output ENV VAR'
+
+    - bash: |
+        echo ">>>>>>" $(PYPI_HOST)
+        echo ">>>>>>" $(PYPI_TEST)
+      displayName: 'Test output Macro'
