@@ -54,7 +54,7 @@ stages:
     variables:
       image: 'ubuntu-20.04'
       pythonVersion: '3.10'
-      buildTag: ${{ lower($(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)) }}
+      buildTag: ${{ lower("$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)") }}
 
     pool:
       vmImage: $(image)
