@@ -96,6 +96,12 @@ stages:
         poetry publish -r testpypi
       displayName: 'Publish to PyPI'
 
-    - script: |
-        ls -la  $(Build.ArtifactStagingDirectory)
-      displayName: 'Debug'
+    - task: GitHubRelease@1
+      inputs:
+        gitHubConnection: 'github.com_stdtom (Release)'
+        repositoryName: '$(Build.Repository.Name)'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'gitTag'
+        assets: 'dist/sample_prj-$(Build.SourceBranchName)-*.*'
+        addChangeLog: false
