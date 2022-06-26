@@ -150,6 +150,7 @@ stages:
         repositoryName: '$(Build.Repository.Name)'
         action: 'edit'
         target: '$(Build.SourceVersion)'
-        tagSource: 'gitTag'
+        tag: '$(Build.SourceBranchName)'
         assets: 'dist/sample_prj-$(Build.SourceBranchName)-*.*'
+        assetUploadMode: 'replace'
         addChangeLog: false
