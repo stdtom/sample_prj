@@ -122,7 +122,7 @@ stages:
         pip install -U poetry
       displayName: 'Install Poetry'
 
-    - script: |
+    - bash: |
         echo ">>>>>>" $(PYPI_HOST)
         echo ">>>>>>" $(PYPI_TEST)
         BUILDTAG=$(echo "$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
