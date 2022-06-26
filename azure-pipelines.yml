@@ -106,6 +106,7 @@ stages:
         addChangeLog: false
 
   - job: Windows
+    dependsOn: Linux
     variables:
       image: 'windows-2019'
       pythonVersion: '3.8'
@@ -147,7 +148,7 @@ stages:
       inputs:
         gitHubConnection: 'github.com_stdtom (Release)'
         repositoryName: '$(Build.Repository.Name)'
-        action: 'create'
+        action: 'edit'
         target: '$(Build.SourceVersion)'
         tagSource: 'gitTag'
         assets: 'dist/sample_prj-$(Build.SourceBranchName)-*.*'
