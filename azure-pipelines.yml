@@ -47,7 +47,7 @@ stages:
         poetry run tox -e $PYENV
       displayName: 'Running tests via tox'
 
-- stage: "Build & Deploy"
+- stage: Build_Deploy
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v') )
   jobs:
   - job: Linux
