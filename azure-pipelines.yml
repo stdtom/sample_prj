@@ -73,12 +73,20 @@ stages:
         echo ">>>>>>" $(PYPI_TEST)
       displayName: 'Test output Macro'
 
-#    - script: |
-#        poetry config http-basic.testpypi $(PYPI_USER) $(PYPI_TOKEN)
-#        poetry config repositories.testpypi $(PYPI_HOST)
-#      displayName: 'Config Poetry for Deployment'
-#
-#    - script: |
-#        poetry install -v
-#        poetry build
-#      displayName: 'Build'
+    - script: |
+        poetry config http-basic.testpypi $(PYPI_USER) $(PYPI_TOKEN)
+        poetry config repositories.testpypi $(PYPI_HOST)
+      displayName: 'Config Poetry for Deployment'
+
+    - script: |
+        poetry install -v
+        poetry build
+      displayName: 'Build'
+
+    - script: |
+        poetry publish -r testpypi
+      displayName: 'Publish to PyPI'
+
+    - script: |
+        ls -la  $(Build.ArtifactStagingDirectory)
+      displayName: 'Debug'
