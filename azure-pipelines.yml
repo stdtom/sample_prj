@@ -72,7 +72,7 @@ stages:
         echo ">>>>>>" $(PYPI_HOST)
         echo ">>>>>>" $(PYPI_TEST)
         BUILDTAG=$(echo "$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
-        echo ">>>>>>" $(BUILDTAG)
+        echo ">>>>>>" $BUILDTAG
         env | sort
       displayName: 'Test output/Debug'
 
@@ -83,12 +83,12 @@ stages:
 
     - script: |
         BUILDTAG=$(echo "$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
-        echo ">>>>>>" $(BUILDTAG)
+        echo ">>>>>>" $BUILDTAG
         poetry install -v
         poetry build
         poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
-        tar cvzf dist/sample_prj-$(BUILDTAG).tar.gz dist/sample_prj
-        sha256sum dist/sample_prj-$(BUILDTAG).tar.gz > dist/sample_prj-$(BUILDTAG).tar.gz.sha256
+        tar cvzf dist/sample_prj-$BUILDTAG.tar.gz dist/sample_prj
+        sha256sum dist/sample_prj-$BUILDTAG.tar.gz > dist/sample_prj-$BUILDTAG.tar.gz.sha256
         ls -R dist
       displayName: 'Build'
 
