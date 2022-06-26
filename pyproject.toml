@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "sample_prj"
-version = "0.4.9"
+version = "0.4.10"
 description = "Python Boilerplate contains all the "
 authors = ["StdTom <stdtom@gmx.net>"]
 license = "Apache Software License 2.0"
