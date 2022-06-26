@@ -1,3 +1,10 @@
+trigger:
+  tags:
+    include:
+    - 'v*'
+  branches:
+    include:
+    - '*'
 variables:
 - group: TestPyPi
 stages:
