@@ -54,6 +54,7 @@ stages:
     variables:
       image: 'ubuntu-20.04'
       pythonVersion: '3.10'
+      buildTag: ${{ lower($(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)) }}
 
     pool:
       vmImage: $(image)
@@ -71,6 +72,7 @@ stages:
     - script: |
         echo ">>>>>>" $(PYPI_HOST)
         echo ">>>>>>" $(PYPI_TEST)
+        echo ">>>>>>" $(buildTag)
         env | sort
       displayName: 'Test output/Debug'
 
@@ -83,8 +85,8 @@ stages:
         poetry install -v
         poetry build
         poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
-        tar cvzf dist/sample_prj-$TRAVIS_TAG-$(Agent.OS)-$(Agent.OSArchitecture).tar.gz dist/sample_prj
-        sha256sum dist/sample_prj-$TRAVIS_TAG-$(Agent.OS)-$(Agent.OSArchitecture).tar.gz > dist/sample_prj-$TRAVIS_TAG-$(Agent.OS)-$(Agent.OSArchitecture).tar.gz.sha256
+        tar cvzf dist/sample_prj-$(buildTag).tar.gz dist/sample_prj
+        sha256sum dist/sample_prj-$(buildTag).tar.gz > dist/sample_prj-$(buildTag).tar.gz.sha256
         ls -R dist
       displayName: 'Build'
 
