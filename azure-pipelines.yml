@@ -47,10 +47,10 @@ stages:
         poetry run tox -e $PYENV
       displayName: 'Running tests via tox'
 
-- stage: Deploy
+- stage: Build & Deploy
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v') )
   jobs:
-  - job: Deploy
+  - job: Linux
     variables:
       image: 'ubuntu-20.04'
       pythonVersion: '3.10'
@@ -65,7 +65,6 @@ stages:
 
     - script: |
         pip install -U poetry
-        pip install -U tox
       displayName: 'Install Poetry'
 
     - script: |
@@ -95,6 +94,54 @@ stages:
     - script: |
         poetry publish -r testpypi
       displayName: 'Publish to PyPI'
+
+    - task: GitHubRelease@1
+      inputs:
+        gitHubConnection: 'github.com_stdtom (Release)'
+        repositoryName: '$(Build.Repository.Name)'
+        action: 'create'
+        target: '$(Build.SourceVersion)'
+        tagSource: 'gitTag'
+        assets: 'dist/sample_prj-$(Build.SourceBranchName)-*.*'
+        addChangeLog: false
+
+  - job: Windows
+    variables:
+      image: 'windows-2019'
+      pythonVersion: '3.8'
+
+    pool:
+      vmImage: $(image)
+
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '$(pythonVersion)'
+
+    - script: |
+        pip install -U poetry
+      displayName: 'Install Poetry'
+
+    - script: |
+        echo ">>>>>>" $(PYPI_HOST)
+        echo ">>>>>>" $(PYPI_TEST)
+        BUILDTAG=$(echo "$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
+        echo ">>>>>>" $BUILDTAG
+        env | sort
+      displayName: 'Test output/Debug'
+
+    - bash: |
+        BUILDTAG=$(echo "$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
+        echo ">>>>>>" $BUILDTAG
+        poetry install -v
+        poetry build
+        poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
+        ls -R dist
+        7z a dist/sample_prj-$BUILDTAG.zip dist/sample_prj.exe
+        ls -R dist
+        sha256sum dist/sample_prj-$BUILDTAG.zip > dist/sample_prj-$BUILDTAG.zip.sha256
+        ls -R dist
+      displayName: 'Build'
 
     - task: GitHubRelease@1
       inputs:
