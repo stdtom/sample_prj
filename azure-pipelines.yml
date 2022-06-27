@@ -85,8 +85,8 @@ stages:
         echo ">>>>>>" $BUILDNAME
         poetry install -v
         poetry build
-        poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
-        tar cvzf dist/$BUILDNAME.tar.gz dist/sample_prj
+        poetry run pyinstaller $(System.TeamProject)/cli.py -n $(System.TeamProject) --onefile --exclude-module _bootlocale
+        tar cvzf dist/$BUILDNAME.tar.gz dist/$(System.TeamProject)
         sha256sum dist/$BUILDNAME.tar.gz > dist/$BUILDNAME.tar.gz.sha256
         ls -R dist
       displayName: 'Build'
@@ -102,7 +102,7 @@ stages:
         action: 'create'
         target: '$(Build.SourceVersion)'
         tagSource: 'gitTag'
-        assets: 'dist/sample_prj-$(Build.SourceBranchName)-*.*'
+        assets: 'dist/$(System.TeamProject)-$(Build.SourceBranchName)-*.*'
         addChangeLog: false
 
   - job: Windows
@@ -136,9 +136,9 @@ stages:
         echo ">>>>>>" $BUILDNAME
         poetry install -v
         poetry build
-        poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
+        poetry run pyinstaller $(System.TeamProject)/cli.py -n $(System.TeamProject) --onefile --exclude-module _bootlocale
         ls -R dist
-        7z a dist/$BUILDNAME.zip dist/sample_prj.exe
+        7z a dist/$BUILDNAME.zip dist/$(System.TeamProject).exe
         ls -R dist
         sha256sum dist/$BUILDNAME.zip > dist/$BUILDNAME.zip.sha256
         ls -R dist
@@ -151,6 +151,6 @@ stages:
         action: 'edit'
         target: '$(Build.SourceVersion)'
         tag: '$(Build.SourceBranchName)'
-        assets: 'dist/sample_prj-$(Build.SourceBranchName)-*.*'
+        assets: 'dist/$(System.TeamProject)-$(Build.SourceBranchName)-*.*'
         assetUploadMode: 'replace'
         addChangeLog: false
