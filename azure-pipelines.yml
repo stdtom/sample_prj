@@ -81,13 +81,13 @@ stages:
       displayName: 'Config Poetry for Deployment'
 
     - script: |
-        BUILDTAG=$(echo "$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
-        echo ">>>>>>" $BUILDTAG
+        BUILDNAME=$(echo "$(System.TeamProject)-$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
+        echo ">>>>>>" $BUILDNAME
         poetry install -v
         poetry build
         poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
-        tar cvzf dist/sample_prj-$BUILDTAG.tar.gz dist/sample_prj
-        sha256sum dist/sample_prj-$BUILDTAG.tar.gz > dist/sample_prj-$BUILDTAG.tar.gz.sha256
+        tar cvzf dist/$BUILDNAME.tar.gz dist/sample_prj
+        sha256sum dist/$BUILDNAME.tar.gz > dist/$BUILDNAME.tar.gz.sha256
         ls -R dist
       displayName: 'Build'
 
@@ -132,15 +132,15 @@ stages:
       displayName: 'Test output/Debug'
 
     - bash: |
-        BUILDTAG=$(echo "$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
-        echo ">>>>>>" $BUILDTAG
+        BUILDNAME=$(echo "$(System.TeamProject)-$(Build.SourceBranchName)-$(Agent.OS)-$(Agent.OSArchitecture)" | tr '[:upper:]' '[:lower:]')
+        echo ">>>>>>" $BUILDNAME
         poetry install -v
         poetry build
         poetry run pyinstaller sample_prj/cli.py -n sample_prj --onefile --exclude-module _bootlocale
         ls -R dist
-        7z a dist/sample_prj-$BUILDTAG.zip dist/sample_prj.exe
+        7z a dist/$BUILDNAME.zip dist/sample_prj.exe
         ls -R dist
-        sha256sum dist/sample_prj-$BUILDTAG.zip > dist/sample_prj-$BUILDTAG.zip.sha256
+        sha256sum dist/$BUILDNAME.zip > dist/$BUILDNAME.zip.sha256
         ls -R dist
       displayName: 'Build'
 
