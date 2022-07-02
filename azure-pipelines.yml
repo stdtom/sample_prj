@@ -16,9 +16,9 @@ stages:
 #        'Python 3.8/Linux':
 #          image: 'ubuntu-20.04'
 #          pythonVersion: '3.8'
-#        'Python 3.9/Linux':
-#          image: 'ubuntu-20.04'
-#          pythonVersion: '3.9'
+        'Python 3.9/Linux':
+          image: 'ubuntu-20.04'
+          pythonVersion: '3.9'
         'Python 3.10/Linux':
           image: 'ubuntu-20.04'
           pythonVersion: '3.10'
@@ -44,7 +44,7 @@ stages:
 
     - bash: |
         PYENV=$(sed -e 's/\.//' <<< "py$(pythonVersion)")
-        poetry run tox -e $PYENV
+        tox -e $PYENV
       displayName: 'Running tests via tox'
 
 - stage: Build_Deploy
